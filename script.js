@@ -1,13 +1,65 @@
-(function () {
-  const COUNT = 5;
-  const CARD_FILES = ["1_blackwhite.jpg", "2_blackwhite.jpg", "3_blackwhite.jpg", "4_blackwhite.jpg", "5_blackwhite.jpg"];
-  const BG_FILES   = ["1_color.jpg", "2_color.jpg", "3_color.jpg", "4_color.jpg", "5_color.jpg"];
+(async function () {
+  const IMG_REPO = "https://api.github.com/repos/28e1o/img/contents/";
   const CARD   = "https://raw.githubusercontent.com/28e1o/img/refs/heads/main/hitam-putih/";
   const BGFULL = "https://raw.githubusercontent.com/28e1o/img/refs/heads/main/color/";
 
+  const FALLBACK_CARDS = ["1_blackwhite.jpg", "2_blackwhite.jpg", "3_blackwhite.jpg", "4_blackwhite.jpg", "5_blackwhite.jpg"];
+  const FALLBACK_BGS   = ["1_color.jpg", "2_color.jpg", "3_color.jpg", "4_color.jpg", "5_color.jpg"];
+
+  async function fetchList(folder) {
+    const res = await fetch(IMG_REPO + folder);
+    if (!res.ok) throw new Error("API " + folder);
+    const json = await res.json();
+    return Array.isArray(json) ? json : [];
+  }
+
+  function numOf(name) {
+    const m = name.match(/^(\d+)/);
+    return m ? parseInt(m[1], 10) : NaN;
+  }
+
+  async function loadGallery() {
+    try {
+      const [cardFiles, bgFiles] = await Promise.all([
+        fetchList("hitam-putih"),
+        fetchList("color")
+      ]);
+      const cardMap = new Map();
+      const bgNums = new Set();
+      cardFiles.forEach(f => {
+        if (!/\.(jpe?g|png|webp)$/i.test(f.name)) return;
+        const n = numOf(f.name);
+        if (!isNaN(n)) cardMap.set(n, f.name);
+      });
+      bgFiles.forEach(f => {
+        if (!/\.(jpe?g|png|webp)$/i.test(f.name)) return;
+        const n = numOf(f.name);
+        if (!isNaN(n)) bgNums.add(n);
+      });
+      const nums = [...cardMap.keys()].filter(n => bgNums.has(n)).sort((a, b) => a - b);
+      if (!nums.length) throw new Error("empty");
+      return {
+        cardUrls: nums.map(n => CARD + cardMap.get(n)),
+        bgUrls:   nums.map(n => BGFULL + n + "_color.jpg")
+      };
+    } catch (e) {
+      return {
+        cardUrls: FALLBACK_CARDS.map(f => CARD + f),
+        bgUrls:   FALLBACK_BGS.map(f => BGFULL + f)
+      };
+    }
+  }
+
+  const gallery = await loadGallery();
+  const COUNT     = gallery.cardUrls.length;
+  const CARD_URLS = gallery.cardUrls;
+  const BG_URLS   = gallery.bgUrls;
+
+  CARD_URLS.forEach(u => new Image().src = u);
+  BG_URLS.forEach(u => new Image().src = u);
+
   const EXPLAIN = [
     {
-      kicker: "01 / 05",
       name: "顾星河",
       pinyin: "Gù Xīnghé",
       title: "星河公子 · Tuan Muda Sungai Bintang",
@@ -36,15 +88,8 @@
         "Bagi Gu Xinghe, pencapaiannya pada Step 6 membuat pemahamannya terhadap Dao Waktu mampu memengaruhi aliran waktu dalam ruang terbatas. Ia dapat merasakan jejak masa lalu, melihat kemungkinan masa depan, dan menggunakan hukum waktu dalam pertarungan.",
         "Namun, ia masih belum mencapai ranah tertinggi. Step 6 adalah titik ketika seorang kultivator mulai benar-benar \u201Cmenyentuh Langit\u201D, bukan sekadar mengolah kekuatan dalam tubuhnya."
       ]
-    },
-    { placeholder: true },
-    { placeholder: true },
-    { placeholder: true },
-    { placeholder: true }
+    }
   ];
-
-  CARD_FILES.forEach(f => new Image().src = CARD + f);
-  BG_FILES.forEach(f => new Image().src = BGFULL + f);
 
   const track   = document.getElementById("track");
   const stage   = document.getElementById("stage");
@@ -60,7 +105,7 @@
     const inner = document.createElement("div");
     inner.className = "card-in";
     const img = document.createElement("img");
-    img.src = CARD + CARD_FILES[i];
+    img.src = CARD_URLS[i];
     img.alt = "Kartu " + (i + 1);
     img.draggable = false;
     inner.appendChild(img);
@@ -70,14 +115,13 @@
 
     const bg = document.createElement("div");
     bg.className = "bg-layer";
-    bg.style.backgroundImage = "url('" + BGFULL + BG_FILES[i] + "')";
+    bg.style.backgroundImage = "url('" + BG_URLS[i] + "')";
     bgStack.appendChild(bg);
     bgs.push(bg);
 
     const dot = document.createElement("button");
     dot.className = "dot";
     dot.setAttribute("aria-label", "Ke kartu " + (i + 1));
-    dot.addEventListener("click", () => { target = i; });
     dotsEl.appendChild(dot);
     dots.push(dot);
   }
@@ -137,7 +181,7 @@
     return el;
   }
 
-  function buildExplain(entry) {
+  function buildExplain(entry, idx) {
     explainBox.textContent = "";
     if (!entry || entry.placeholder) {
       const ph = h("div", "placeholder");
@@ -148,7 +192,7 @@
       explainBox.appendChild(ph);
       return;
     }
-    explainBox.appendChild(h("span", "kicker", entry.kicker));
+    explainBox.appendChild(h("span", "kicker", pad(idx + 1) + " / " + pad(COUNT)));
     explainBox.appendChild(h("div", "name-cn", entry.name));
     if (entry.pinyin) explainBox.appendChild(h("div", "name-py", entry.pinyin));
     if (entry.title) explainBox.appendChild(h("div", "char-title", entry.title));
@@ -192,7 +236,7 @@
     clearTimeout(swapTimer);
     explainBox.style.opacity = "0";
     swapTimer = setTimeout(() => {
-      buildExplain(EXPLAIN[active]);
+      buildExplain(EXPLAIN[active], active);
       requestAnimationFrame(() => { explainBox.style.opacity = "1"; });
     }, 200);
   }
@@ -210,7 +254,7 @@
   const lbImg = document.getElementById("lightboxImg");
 
   function openLb(i) {
-    lbImg.src = BGFULL + BG_FILES[i];
+    lbImg.src = BG_URLS[i];
     lb.classList.add("open");
     document.body.style.overflow = "hidden";
   }

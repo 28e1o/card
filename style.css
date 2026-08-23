@@ -66,7 +66,7 @@ header {
 .stage {
   position: relative;
   height: calc(100vh - 190px);
-  height: calc(100dvh - 190px);
+  height: calc(100svh - 190px);
   min-height: 420px;
   overflow: hidden;
 }
@@ -83,7 +83,7 @@ header {
 .card {
   flex: 0 0 auto;
   height: min(68vh, 660px);
-  height: min(68dvh, 660px);
+  height: min(68svh, 660px);
   aspect-ratio: var(--ratio);
   will-change: transform, opacity;
 }
