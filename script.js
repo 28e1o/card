@@ -89,7 +89,7 @@
       subHeading: "Tentang Step 6 — 通天阶",
       subParas: [
         "通天阶 (Tōngtiān Jiē) adalah Step keenam dalam sistem kultivasi. Pada tahap ini, seorang kultivator mulai benar-benar menyentuh hukum Langit dan memahami Dao pada tingkat yang jauh lebih tinggi.",
-        "Di dalam Step 6 terdapat beberapa ranah. 通天境 (Tōngtiān Jìng) merupakan salah satu ranah di dalamnya dan menjadi tahap yang telah dicapai oleh Gù Lǎohé.",
+        "Di dalam Step 6 terdapat beberapa ranah. 通天境 (Tōngtiān Jìng) merupakan salah satu ranah di dalamnya dan menjadi tahap yang telah dicapai oleh Gù Xīnghé.",
         "Pada tingkat ini, pemahamannya terhadap 时光大道 · Shíguāng Dàdào — Dao Waktu telah mencapai tingkat yang memungkinkan dirinya memengaruhi aliran waktu dalam ruang terbatas. Ia dapat merasakan jejak masa lalu, melihat kemungkinan masa depan, dan menggunakan hukum waktu dalam pertarungan."
       ]
     },
@@ -111,7 +111,8 @@
         ["Benua", "九州 · Jiǔzhōu"],
         ["Wilayah Asal", "云墨州 · Yúnmò Zhōu"],
         ["Alamat", "墨鹤古城 · Mòhè Gǔchéng"],
-        ["Ranah", "第五阶 · 破界阶 — Step 5, World-Breaking Step\n道域境 — Dao Domain Realm"],
+        ["Ranah", "道域境 — Dao Domain Realm"],
+        ["Step", "第五阶 · 破界阶 — Step 5, World-Breaking Step"],
         ["Dao", "画道 · Huà Dào — Dao Lukisan"],
         ["Era", "Zaman Kuno"],
         ["Status", "Tidak diketahui"]
