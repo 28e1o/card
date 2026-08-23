@@ -36,24 +36,28 @@
         const n = numOf(f.name);
         if (!isNaN(n)) bgNums.add(n);
       });
-      const nums = [...cardMap.keys()].filter(n => bgNums.has(n)).sort((a, b) => a - b);
+      const nums = [...new Set([...cardMap.keys(), ...bgNums])].sort((a, b) => a - b);
       if (!nums.length) throw new Error("empty");
       return {
-        cardUrls: nums.map(n => CARD + cardMap.get(n)),
-        bgUrls:   nums.map(n => BGFULL + n + "_color.jpg")
+        entries: nums.map(n => ({
+          cardUrl: cardMap.has(n) ? CARD + cardMap.get(n) : BGFULL + n + "_color.jpg",
+          bgUrl:   bgNums.has(n) ? BGFULL + n + "_color.jpg" : null
+        }))
       };
     } catch (e) {
       return {
-        cardUrls: FALLBACK_CARDS.map(f => CARD + f),
-        bgUrls:   FALLBACK_BGS.map(f => BGFULL + f)
+        entries: FALLBACK_CARDS.map((f, i) => ({
+          cardUrl: CARD + f,
+          bgUrl:   BGFULL + FALLBACK_BGS[i]
+        }))
       };
     }
   }
 
-  const gallery = await loadGallery();
-  const COUNT     = gallery.cardUrls.length;
-  const CARD_URLS = gallery.cardUrls;
-  const BG_URLS   = gallery.bgUrls;
+  const gallery   = await loadGallery();
+  const COUNT     = gallery.entries.length;
+  const CARD_URLS = gallery.entries.map(e => e.cardUrl);
+  const BG_URLS   = gallery.entries.map(e => e.bgUrl);
 
   CARD_URLS.forEach(u => new Image().src = u);
   BG_URLS.forEach(u => new Image().src = u);
@@ -254,6 +258,7 @@
   const lbImg = document.getElementById("lightboxImg");
 
   function openLb(i) {
+    if (!BG_URLS[i]) return;
     lbImg.src = BG_URLS[i];
     lb.classList.add("open");
     document.body.style.overflow = "hidden";

@@ -97,9 +97,11 @@ header {
   cursor: pointer;
   transition: transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s ease;
 }
-.card:hover .card-in {
-  transform: scale(1.055);
-  box-shadow: 0 24px 48px -20px rgba(0,0,0,.5);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card-in {
+    transform: scale(1.055);
+    box-shadow: 0 24px 48px -20px rgba(0,0,0,.5);
+  }
 }
 .card-in:active { transform: scale(.97); }
 .card img {
