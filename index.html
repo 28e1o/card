@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galeri</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-stack" id="bgStack"></div>
+<div class="bg-stack bg-blur-wrap"><div class="bg-blur"></div></div>
+
+<div class="page">
+  <header>
+    <div class="scroll-hint">Scroll Down <span class="arr">&#8595;</span></div>
+  </header>
+
+  <section class="stage" id="stage" aria-label="Galeri kartu geser">
+    <div class="track" id="track"></div>
+  </section>
+
+  <div class="controls">
+    <button class="arrow" id="prev" aria-label="Sebelumnya">&#8592;</button>
+    <div class="dots" id="dots"></div>
+    <button class="arrow" id="next" aria-label="Berikutnya">&#8594;</button>
+  </div>
+  <div class="counter" id="counter">01 / 05</div>
+
+  <section class="explain">
+    <div class="explain-inner">
+      <div id="explainBox"></div>
+    </div>
+  </section>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Tutup">&#10005;</button>
+  <img id="lightboxImg" alt="Latar belakang">
+  <div class="lb-hint">Klik &#10005; untuk keluar</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
