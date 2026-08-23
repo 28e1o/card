@@ -270,16 +270,30 @@ header {
   text-align: center;
   padding: 40px 0 20px;
 }
-.placeholder .num {
-  font-size: clamp(56px, 9vw, 88px);
-  font-weight: 800;
-  letter-spacing: .1em;
-  opacity: .12;
+.loader {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
 }
-.placeholder p {
-  margin-top: 10px;
+.loader span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.loader span:nth-child(2) { animation-delay: .15s; }
+.loader span:nth-child(3) { animation-delay: .3s; }
+@keyframes pulse {
+  0%, 100% { transform: scale(.55); opacity: .25; }
+  50%      { transform: scale(1);   opacity: .95; }
+}
+.placeholder .msg {
   font-size: 14px;
-  opacity: .5;
+  letter-spacing: .08em;
+  opacity: .6;
 }
 
 .lightbox {

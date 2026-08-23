@@ -138,7 +138,10 @@
     explainBox.textContent = "";
     if (!entry || entry.placeholder) {
       const ph = h("div", "placeholder");
-      ph.appendChild(h("div", "num", "···"));
+      const ld = h("div", "loader");
+      for (let k = 0; k < 3; k++) ld.appendChild(h("span"));
+      ph.appendChild(ld);
+      ph.appendChild(h("p", "msg", "Karakter ini belum memiliki informasi"));
       explainBox.appendChild(ph);
       return;
     }
@@ -219,6 +222,13 @@
   window.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
 
   window.addEventListener("resize", measure);
+  window.addEventListener("load", measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(measure);
+    ro.observe(stage);
+    ro.observe(cards[0]);
+  }
   measure();
   render();
   requestAnimationFrame(tick);
