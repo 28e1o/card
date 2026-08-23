@@ -89,11 +89,11 @@
 
   function measure() {
     if (!cards[0]) return;
-    const rect = cards[0].getBoundingClientRect();
-    if (rect.width <= 0) return;
+    const w = cards[0].offsetWidth || cards[0].getBoundingClientRect().width;
+    if (w <= 0) return;
     const gap = parseFloat(getComputedStyle(track).gap) || 48;
-    step = rect.width + gap;
-    half = rect.width / 2;
+    step = w + gap;
+    half = w / 2;
   }
 
   const pad = n => String(n).padStart(2, "0");
