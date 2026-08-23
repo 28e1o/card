@@ -88,10 +88,12 @@
   let half = 0;
 
   function measure() {
-    const cardW = cards[0].getBoundingClientRect().width;
+    if (!cards[0]) return;
+    const rect = cards[0].getBoundingClientRect();
+    if (rect.width <= 0) return;
     const gap = parseFloat(getComputedStyle(track).gap) || 48;
-    step = cardW + gap;
-    half = cardW / 2;
+    step = rect.width + gap;
+    half = rect.width / 2;
   }
 
   const pad = n => String(n).padStart(2, "0");
@@ -115,6 +117,7 @@
   }
 
   function tick() {
+    measure();
     pos += (target - pos) * 0.07;
     if (Math.abs(target - pos) < 0.0008) pos = target;
     render();
@@ -221,14 +224,6 @@
   lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
   window.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
 
-  window.addEventListener("resize", measure);
-  window.addEventListener("load", measure);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-  if (window.ResizeObserver) {
-    const ro = new ResizeObserver(measure);
-    ro.observe(stage);
-    ro.observe(cards[0]);
-  }
   measure();
   render();
   requestAnimationFrame(tick);
