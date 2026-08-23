@@ -111,8 +111,8 @@
         ["Benua", "九州 · Jiǔzhōu"],
         ["Wilayah Asal", "云墨州 · Yúnmò Zhōu"],
         ["Alamat", "墨鹤古城 · Mòhè Gǔchéng"],
-        ["Ranah", "道域境 — Dao Domain Realm"],
-        ["Step", "第五阶 · 破界阶 — Step 5, World-Breaking Step"],
+        ["Ranah", "第五阶 · 破界阶 — Step 5, World-Breaking Step"],
+        ["Step", "道域境 — Dao Domain Realm"],
         ["Dao", "画道 · Huà Dào — Dao Lukisan"],
         ["Era", "Zaman Kuno"],
         ["Status", "Tidak diketahui"]
