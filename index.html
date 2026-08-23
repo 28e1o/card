@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Galeri</title>
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=14">
 </head>
 <body>
 
@@ -36,10 +36,15 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="Tutup">&#10005;</button>
-  <img id="lightboxImg" alt="Latar belakang">
-  <div class="lb-hint">Klik &#10005; untuk keluar</div>
+  <div class="lb-card">
+    <div class="lb-card-in" id="lbCardIn">
+      <img id="lbColorImg" alt="Versi warna">
+      <div class="lb-scratch-hint" id="lbHint">Coret untuk mewarnai</div>
+    </div>
+  </div>
+  <button class="lb-reset" id="lbReset" aria-label="Ulangi coretan">&#8635;</button>
 </div>
 
-<script src="script.js?v=9"></script>
+<script src="script.js?v=17"></script>
 </body>
 </html>

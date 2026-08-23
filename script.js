@@ -25,7 +25,7 @@
         fetchList("color")
       ]);
       const cardMap = new Map();
-      const bgNums = new Set();
+      const bgMap   = new Map();
       cardFiles.forEach(f => {
         if (!/\.(jpe?g|png|webp)$/i.test(f.name)) return;
         const n = numOf(f.name);
@@ -34,15 +34,20 @@
       bgFiles.forEach(f => {
         if (!/\.(jpe?g|png|webp)$/i.test(f.name)) return;
         const n = numOf(f.name);
-        if (!isNaN(n)) bgNums.add(n);
+        if (!isNaN(n)) bgMap.set(n, f.name);
       });
-      const nums = [...new Set([...cardMap.keys(), ...bgNums])].sort((a, b) => a - b);
+      const nums = [...new Set([...cardMap.keys(), ...bgMap.keys()])].sort((a, b) => a - b);
       if (!nums.length) throw new Error("empty");
       return {
         entries: nums.map(n => ({
-          cardUrl: cardMap.has(n) ? CARD + cardMap.get(n) : BGFULL + n + "_color.jpg",
-          bgUrl:   bgNums.has(n) ? BGFULL + n + "_color.jpg" : null
-        }))
+          // Always use the real filename returned by the GitHub API for
+          // each folder instead of guessing "<n>_color.jpg" — a guessed
+          // name that doesn't exactly match what's actually in the color/
+          // folder (different extension, casing, etc.) silently loads the
+          // wrong file, which looks like a "misaligned" sketch/color pair.
+          cardUrl: cardMap.has(n) ? CARD + cardMap.get(n) : (bgMap.has(n) ? BGFULL + bgMap.get(n) : null),
+          bgUrl:   bgMap.has(n)   ? BGFULL + bgMap.get(n) : null
+        })).filter(e => e.cardUrl)
       };
     } catch (e) {
       return {
@@ -285,24 +290,251 @@
 
   dots.forEach((d, i) => d.addEventListener("click", () => { target = i; }));
 
-  const lb    = document.getElementById("lightbox");
-  const lbImg = document.getElementById("lightboxImg");
+  const lb        = document.getElementById("lightbox");
+  const lbCardBox = document.getElementById("lbCardIn");
+  const lbColor   = document.getElementById("lbColorImg");
+  const lbHint    = document.getElementById("lbHint");
+
+  const scratchCv    = [];
+  const scratchCtx   = [];
+  const scratchInit  = [];
+  const scratchedFlg = [];
+  const scratchBw    = [];
+  const scratchDpr   = [];
+  const scratchReady = [];
+
+  let openIdx = -1;
+  let cv = null, cx = null;
+  let brush = 32;
+  let drawing = false;
+  let lx = 0, ly = 0;
+  let cardAnimDone = false;
+
+  function drawCover(c, img, W, H) {
+    const ir = img.naturalWidth / img.naturalHeight;
+    const cr = W / H;
+    let w, h;
+    if (ir > cr) { h = H; w = H * ir; } else { w = W; h = W / ir; }
+    c.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+  }
+
+  function pointerPos(c, i, e) {
+    const r  = c.getBoundingClientRect();
+    const kx = r.width  ? c.width  / r.width  : 1;
+    const ky = r.height ? c.height / r.height : 1;
+    const d  = scratchDpr[i] || 1;
+    return [(e.clientX - r.left) * kx / d, (e.clientY - r.top) * ky / d];
+  }
+
+  function ensureCanvas(i) {
+    if (scratchCv[i]) return;
+    const c = document.createElement("canvas");
+    c.className = "scratch-canvas";
+    lbCardBox.insertBefore(c, lbHint);
+
+    c.addEventListener("pointerdown", e => {
+      // Guard: ignore taps that land before the sketch image has finished
+      // loading and the canvas has been sized to match the card. Drawing
+      // onto an unsized canvas (default 300x150) scales/skews strokes
+      // relative to the real artwork, which is what caused scratches to
+      // land in the wrong spot.
+      if (!scratchReady[i] || !cardAnimDone) return;
+      e.preventDefault();
+      drawing = true;
+      c.setPointerCapture(e.pointerId);
+      [lx, ly] = pointerPos(c, i, e);
+      strokeTo(lx, ly, lx, ly, true);
+      scratchedFlg[i] = true;
+      lbHint.classList.add("hide");
+    });
+    c.addEventListener("pointermove", e => {
+      if (!drawing || !scratchReady[i]) return;
+      const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+      for (const ev of evs) {
+        const [x, y] = pointerPos(c, i, ev);
+        strokeTo(lx, ly, x, y, false);
+        lx = x; ly = y;
+      }
+    });
+    ["pointerup", "pointercancel"].forEach(ev =>
+      c.addEventListener(ev, () => { drawing = false; })
+    );
+
+    scratchCv[i]  = c;
+    scratchCtx[i] = c.getContext("2d");
+  }
+
+  function initScratchLayer(i) {
+    const c   = scratchCv[i];
+    const ctx = scratchCtx[i];
+    const bw  = scratchBw[i];
+    if (!c || !bw || !bw.complete || !bw.naturalWidth) return false;
+    const w   = lbCardBox.clientWidth;
+    const hgt = lbCardBox.clientHeight;
+    if (!w || !hgt) return false;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width  = Math.round(w * dpr);
+    c.height = Math.round(hgt * dpr);
+    scratchDpr[i] = dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, w, hgt);
+    drawCover(ctx, bw, w, hgt);
+    brush = Math.max(24, Math.min(56, Math.min(w, hgt) * 0.08));
+    scratchInit[i]   = true;
+    scratchedFlg[i]  = false;
+    return true;
+  }
+
+  function layerMatchesSize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    return cv.width === Math.round(lbCardBox.clientWidth * dpr) &&
+           cv.height === Math.round(lbCardBox.clientHeight * dpr);
+  }
+
+  // Re-fit an already-drawn scratch layer to a new box size without wiping
+  // out the player's progress. The lightbox card keeps a fixed aspect ratio
+  // (width is derived from height via calc()), so a uniform rescale of the
+  // existing bitmap is safe and won't distort it. This covers cases like a
+  // mobile browser's address bar hiding/showing (changes svh mid-session)
+  // or rotating the device while the lightbox is open.
+  function resyncScratchLayer(i) {
+    const c   = scratchCv[i];
+    const ctx = scratchCtx[i];
+    if (!c || !ctx || !scratchInit[i]) return;
+    const w   = lbCardBox.clientWidth;
+    const hgt = lbCardBox.clientHeight;
+    if (!w || !hgt) return;
+    const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    const newW = Math.round(w * dpr);
+    const newH = Math.round(hgt * dpr);
+    if (c.width === newW && c.height === newH) return;
+
+    const snapshot = document.createElement("canvas");
+    snapshot.width  = c.width;
+    snapshot.height = c.height;
+    snapshot.getContext("2d").drawImage(c, 0, 0);
+
+    c.width  = newW;
+    c.height = newH;
+    scratchDpr[i] = dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, w, hgt);
+    ctx.drawImage(snapshot, 0, 0, w, hgt);
+    brush = Math.max(24, Math.min(56, Math.min(w, hgt) * 0.08));
+  }
+
+  function strokeTo(x0, y0, x1, y1, dot) {
+    if (!cx) return;
+    cx.globalCompositeOperation = "destination-out";
+    cx.strokeStyle = "#000";
+    cx.fillStyle   = "#000";
+    cx.lineWidth   = brush;
+    cx.lineCap     = "round";
+    cx.lineJoin    = "round";
+    if (dot) {
+      cx.beginPath();
+      cx.arc(x0, y0, brush / 2, 0, Math.PI * 2);
+      cx.fill();
+      return;
+    }
+    cx.beginPath();
+    cx.moveTo(x0, y0);
+    cx.lineTo(x1, y1);
+    cx.stroke();
+  }
+
+  function mountCanvas(i) {
+    lbCardBox.querySelectorAll(".scratch-canvas").forEach(el => el.remove());
+    if (scratchCv[i]) lbCardBox.insertBefore(scratchCv[i], lbHint);
+  }
+
+  function prepareScratch(i) {
+    scratchReady[i] = false;
+    const bw = new Image();
+    bw.onload = () => {
+      if (openIdx !== i) return;
+      scratchBw[i] = bw;
+      if (!scratchInit[i]) {
+        initScratchLayer(i);
+      } else if (!layerMatchesSize()) {
+        // Size changed since this card was last scratched (e.g. viewport
+        // shifted while it was closed) — rescale instead of wiping progress.
+        resyncScratchLayer(i);
+      } else {
+        const w   = lbCardBox.clientWidth;
+        const hgt = lbCardBox.clientHeight;
+        brush = Math.max(24, Math.min(56, Math.min(w, hgt) * 0.08));
+      }
+      scratchReady[i] = true;
+    };
+    bw.src = CARD_URLS[i];
+  }
 
   function openLb(i) {
-    if (!BG_URLS[i]) return;
-    lbImg.src = BG_URLS[i];
+    openIdx = i;
+    cv = null; cx = null; drawing = false;
+    cardAnimDone = false;
+    lbColor.src = BG_URLS[i] || CARD_URLS[i];
+    ensureCanvas(i);
+    mountCanvas(i);
+    cv = scratchCv[i];
+    cx = scratchCtx[i];
+    prepareScratch(i);
     lb.classList.add("open");
     document.body.style.overflow = "hidden";
+    setTimeout(() => {
+      if (openIdx === i) lbHint.classList.toggle("hide", !!scratchedFlg[i]);
+    }, 400);
+    // Fallback in case transitionend never fires (reduced-motion, tab
+    // backgrounded during the animation, etc.).
+    setTimeout(() => { if (openIdx === i) cardAnimDone = true; }, ANIM_MS + 80);
   }
   function closeLb() {
+    openIdx = -1;
+    cv = null; cx = null;
     lb.classList.remove("open");
     document.body.style.overflow = "";
   }
 
+  const lbCardEl = document.querySelector(".lb-card");
+  lbCardEl.addEventListener("transitionend", e => {
+    // The card scales in from 0.8 -> 1 on open. getBoundingClientRect()
+    // (used to map touch position -> canvas pixels) reflects that live
+    // transform, so a scratch started mid-animation was measured against
+    // the wrong box size. Wait for the transform transition to finish
+    // before allowing strokes.
+    if (e.propertyName === "transform" && lb.classList.contains("open")) {
+      cardAnimDone = true;
+    }
+  });
+  // Fallback in case transitionend doesn't fire (e.g. reduced-motion).
+  const ANIM_MS = 350;
+
+  // Keep the scratch canvas matched to the card's on-screen size while the
+  // lightbox is open (mobile browsers can change viewport height — e.g. an
+  // address bar hiding on scroll — independent of user action).
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => {
+      if (openIdx >= 0) resyncScratchLayer(openIdx);
+    }).observe(lbCardBox);
+  } else {
+    window.addEventListener("resize", () => {
+      if (openIdx >= 0) resyncScratchLayer(openIdx);
+    });
+  }
+
   cards.forEach((card, i) => card.addEventListener("click", () => openLb(i)));
   document.getElementById("lbClose").addEventListener("click", closeLb);
+  document.getElementById("lbReset").addEventListener("click", () => {
+    if (openIdx < 0) return;
+    if (initScratchLayer(openIdx)) lbHint.classList.remove("hide");
+  });
   lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
-  window.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape" && lb.classList.contains("open")) closeLb();
+  });
 
   measure();
   render();
