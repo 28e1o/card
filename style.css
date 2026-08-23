@@ -259,7 +259,7 @@ header {
   letter-spacing: .08em;
   font-size: 12px;
 }
-.fact .v { opacity: .85; line-height: 1.7; }
+.fact .v { opacity: .85; line-height: 1.7; white-space: pre-line; }
 
 .sub-h {
   margin-top: 52px;

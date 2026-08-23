@@ -80,17 +80,47 @@
         ["Benua", "九州 · Jiǔzhōu"],
         ["Wilayah Asal", "天衡州 · Tiānhéng Zhōu"],
         ["Alamat", "星陨古地 · Xīngyǔn Gǔdì"],
-        ["Ranah", "第六境 · 通天境 — Step 6, Alam Penembus Langit"],
+        ["Ranah", "第六阶 · 通天阶 — Step 6, Heaven-Piercing Step"],
+        ["Step", "通天境 · Tōngtiān Jìng — Heaven-Piercing Realm"],
         ["Dao", "时光大道 · Shíguāng Dàdào — Dao Waktu"],
         ["Era", "Zaman Kuno"],
         ["Status", "Tidak diketahui"]
       ],
-      subHeading: "Tentang Step 6 — 通天境",
+      subHeading: "Tentang Step 6 — 通天阶",
       subParas: [
-        "Tongtian Jing (通天境) adalah ranah keenam dalam sistem kultivasi.",
-        "Pada tahap ini, seorang kultivator tidak lagi hanya mengandalkan qi spiritual. Ia mulai memahami dan menyentuh hukum dunia serta Dao.",
-        "Bagi Gu Xinghe, pencapaiannya pada Step 6 membuat pemahamannya terhadap Dao Waktu mampu memengaruhi aliran waktu dalam ruang terbatas. Ia dapat merasakan jejak masa lalu, melihat kemungkinan masa depan, dan menggunakan hukum waktu dalam pertarungan.",
-        "Namun, ia masih belum mencapai ranah tertinggi. Step 6 adalah titik ketika seorang kultivator mulai benar-benar \u201Cmenyentuh Langit\u201D, bukan sekadar mengolah kekuatan dalam tubuhnya."
+        "通天阶 (Tōngtiān Jiē) adalah Step keenam dalam sistem kultivasi. Pada tahap ini, seorang kultivator mulai benar-benar menyentuh hukum Langit dan memahami Dao pada tingkat yang jauh lebih tinggi.",
+        "Di dalam Step 6 terdapat beberapa ranah. 通天境 (Tōngtiān Jìng) merupakan salah satu ranah di dalamnya dan menjadi tahap yang telah dicapai oleh Gù Lǎohé.",
+        "Pada tingkat ini, pemahamannya terhadap 时光大道 · Shíguāng Dàdào — Dao Waktu telah mencapai tingkat yang memungkinkan dirinya memengaruhi aliran waktu dalam ruang terbatas. Ia dapat merasakan jejak masa lalu, melihat kemungkinan masa depan, dan menggunakan hukum waktu dalam pertarungan."
+      ]
+    },
+    {
+      name: "童鹤",
+      pinyin: "Tóng Hè",
+      title: "鹤影 · Bayangan Bangau",
+      quote: {
+        cn: "一纸一墨，皆可成真。若世间无真，我便以墨造真。",
+        id: "\u201CSatu lembar kertas, setetes tinta, semuanya dapat menjadi nyata. Jika dunia tak memiliki kebenaran, maka akan kuciptakan kebenaran dengan tinta.\u201D"
+      },
+      paras: [
+        "Seorang kultivator dari Zaman Kuno yang mengabdikan hidupnya pada seni lukisan dan Dao Lukisan. Tóng Hè dikenal sebagai sosok yang tenang, elegan, namun sulit ditebak. Baginya, tinta bukan sekadar alat untuk melukis, melainkan media untuk memahami hukum dunia.",
+        "Konon, Tóng Hè tidak pernah melukis sesuatu tanpa alasan. Setiap goresan tintanya menyimpan makna yang hanya ia sendiri pahami. Tidak ada yang tahu apa yang sebenarnya ia lihat ketika mengangkat kuas, tetapi mereka yang pernah menyaksikan lukisannya mengatakan bahwa tinta di bawah kuasnya seolah memiliki kesadarannya sendiri.",
+        "Namun setelah sebuah lukisan terakhir selesai dibuat, Tóng Hè menghilang tanpa meninggalkan jejak. Tidak ada yang mengetahui ke mana ia pergi atau apa yang sebenarnya terjadi pada dirinya."
+      ],
+      facts: [
+        ["Dunia", "玄苍界 · Xuáncāng Jiè"],
+        ["Benua", "九州 · Jiǔzhōu"],
+        ["Wilayah Asal", "云墨州 · Yúnmò Zhōu"],
+        ["Alamat", "墨鹤古城 · Mòhè Gǔchéng"],
+        ["Ranah", "第五阶 · 破界阶 — Step 5, World-Breaking Step\n道域境 — Dao Domain Realm"],
+        ["Dao", "画道 · Huà Dào — Dao Lukisan"],
+        ["Era", "Zaman Kuno"],
+        ["Status", "Tidak diketahui"]
+      ],
+      subHeading: "Tentang Step 5 — 破界阶",
+      subParas: [
+        "World-Breaking Step (破界阶) merupakan Step kelima dalam sistem kultivasi. Pada tahap ini, seorang kultivator mulai mampu memahami hukum dunia secara lebih mendalam dan secara bertahap memperoleh kekuatan untuk melampaui batas-batas dunia fisik.",
+        "Dao Domain Realm (道域境) merupakan ranah ketiga dalam Step 5. Pada tingkat ini, seorang kultivator telah mampu membentuk Domain Dao miliknya sendiri. Di dalam domain tersebut, hukum Dao yang ia pahami dapat memengaruhi lingkungan dan lawannya.",
+        "Bagi Tóng Hè, Domain Dao miliknya dikenal sebagai 墨界 · Dunia Tinta. Begitu terbuka, tinta dapat memenuhi ruang di sekitarnya dan mengubah kenyataan menjadi seperti sebuah lukisan. Setiap garis yang ia goreskan dapat berubah menjadi bilah, segel, makhluk, atau bahkan ruang kecil yang terpisah dari dunia luar."
       ]
     }
   ];
