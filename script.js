@@ -124,9 +124,10 @@
       ],
       subHeading: "Tentang Step 5 — 破界阶",
       subParas: [
-        "World-Breaking Step (破界阶) merupakan Step kelima dalam sistem kultivasi. Pada tahap ini, seorang kultivator mulai mampu memahami hukum dunia secara lebih mendalam dan secara bertahap memperoleh kekuatan untuk melampaui batas-batas dunia fisik.",
-        "Dao Domain Realm (道域境) merupakan ranah ketiga dalam Step 5. Pada tingkat ini, seorang kultivator telah mampu membentuk Domain Dao miliknya sendiri. Di dalam domain tersebut, hukum Dao yang ia pahami dapat memengaruhi lingkungan dan lawannya.",
-        "Bagi Tóng Hè, Domain Dao miliknya dikenal sebagai 墨界 · Dunia Tinta. Begitu terbuka, tinta dapat memenuhi ruang di sekitarnya dan mengubah kenyataan menjadi seperti sebuah lukisan. Setiap garis yang ia goreskan dapat berubah menjadi bilah, segel, makhluk, atau bahkan ruang kecil yang terpisah dari dunia luar."
+        "破界阶 · Pòjiè Jiē — World-Breaking Step merupakan Step kelima dalam sistem kultivasi. Pada tahap ini, seorang kultivator mulai mampu memahami hukum dan Dao secara lebih mendalam. Kekuatan yang dimilikinya tidak lagi terbatas pada tubuh dan energi spiritual, tetapi mulai mampu memengaruhi lingkungan serta ruang di sekitarnya.",
+        "道域境 · Dàoyù Jìng — Dao Domain Realm merupakan ranah ketiga dalam Step 5. Pada tingkat ini, seorang kultivator telah mampu membentuk Domain Dao miliknya sendiri. Domain tersebut merupakan perwujudan dari pemahaman Dao sang kultivator, sehingga teknik dan kekuatannya dapat memperoleh pengaruh yang jauh lebih besar di dalam wilayah tersebut.",
+        "Bagi Tóng Hè, Domain Dao miliknya dikenal sebagai 墨界 · Mò Jiè — Dunia Tinta. Begitu dibuka, tinta spiritual dapat memenuhi ruang di sekitarnya dan mengubah lingkungan menjadi seperti sebuah lukisan. Setiap goresan kuas yang ia buat dapat berubah menjadi bilah, segel, makhluk, atau bahkan membentuk ruang kecil yang terpisah dari dunia luar.",
+        "Namun, Dao Domain masih memiliki batas. Tóng Hè hanya dapat memengaruhi wilayah yang berada di dalam 墨界. Ia belum memiliki kewenangan untuk mengubah atau memerintah hukum dunia secara langsung."
       ]
     },
     {
@@ -192,18 +193,19 @@
         ["Wilayah", "寒星州 · Hánxīng Zhōu"],
         ["Alamat", "落尘古城 · Luòchén Gǔchéng"],
         ["Klan", "孟氏皇族 · Mèng Shì Huángzú\nKlan Kerajaan Mèng"],
-        ["Kultivasi", "第九阶 · 帝域阶\nStep 9 — Imperial Domain Step"],
-        ["Step", "帝域境 · Dìyù Jìng\nEmperor Domain Realm — Ranah awal Step 9"],
+        ["Kultivasi", "第九阶 · 帝皇阶\nStep 9 — Imperial Emperor Step"],
+        ["Step", "皇极境 · Huángjí Jìng\nImperial Extremity Realm — Ranah pertama Step 9"],
         ["Kultivasi Saat Dibuang", "第三阶 · Sān Jiē\nStep 3"],
         ["Dao", "星辰道 · Xīngchén Dào\nDao Bintang"],
         ["Status", "Mengembara"]
       ],
-      subHeading: "Tentang Step 9 — 帝域阶",
+      subHeading: "Tentang Step 9 — 帝皇阶",
       subParas: [
-        "帝域阶 · Dìyù Jiē — Imperial Domain Step merupakan Step kesembilan dalam sistem kultivasi. Ranah ini berada di atas batas Step 8, sehingga tidak dapat dicapai dengan mudah oleh kultivator dari alam rendah.",
-        "Di dunia tempat Lí Táng berada, Step 8 merupakan batas tertinggi yang diketahui. Karena itu, kemunculan seorang kultivator Step 9 menjadi sesuatu yang belum pernah terjadi sebelumnya.",
-        "帝域境 · Dìyù Jìng — Emperor Domain Realm merupakan ranah pertama dalam Step 9. Pada tahap ini, seorang kultivator mulai membentuk Domain miliknya sendiri. Pemahaman terhadap Dao tidak lagi hanya digunakan untuk memperkuat tubuh atau melakukan teknik, tetapi mulai memengaruhi ruang dan hukum di sekitarnya.",
-        "Lí Táng baru mencapai ranah awal Step 9, sehingga ia masih memiliki banyak hal yang harus dipahami sebelum benar-benar mampu menguasai kekuatan tingkat tersebut."
+        "帝皇阶 · Dìhuáng Jiē — Imperial Emperor Step merupakan Step kesembilan dalam sistem kultivasi. Ini adalah tingkatan ketika seorang kultivator mulai beralih dari sekadar memahami Dao menjadi memiliki otoritas terhadap hukum yang berkaitan dengan Dao tersebut.",
+        "Di alam tempat Lí Táng berada, Step 8 merupakan batas tertinggi yang pernah diketahui. Tidak ada sistem kultivasi, warisan, ataupun catatan yang menjelaskan keberadaan Step 9. Karena itu, ketika Lí Táng menerobos Step 8 dan mencapai Step 9, ia telah melampaui batas alami dunia tersebut.",
+        "皇极境 · Huángjí Jìng — Imperial Extremity Realm merupakan ranah pertama Step 9.",
+        "Pada tahap ini, seorang kultivator mulai memperoleh otoritas hukum. Dao yang sebelumnya hanya dapat digunakan sebagai kekuatan pribadi mulai mampu berinteraksi langsung dengan hukum dunia.",
+        "Lí Táng baru berada pada tahap awal. Ia belum mampu mengendalikan hukum secara mutlak dan masih harus memahami kekuatan barunya. Namun satu hal telah berubah: ia tidak lagi hanya berjalan mengikuti hukum dunia — ia mulai memiliki kemampuan untuk membuat hukum dunia mengakui keberadaannya."
       ]
     }
   ];
