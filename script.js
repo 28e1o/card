@@ -128,6 +128,83 @@
         "Dao Domain Realm (道域境) merupakan ranah ketiga dalam Step 5. Pada tingkat ini, seorang kultivator telah mampu membentuk Domain Dao miliknya sendiri. Di dalam domain tersebut, hukum Dao yang ia pahami dapat memengaruhi lingkungan dan lawannya.",
         "Bagi Tóng Hè, Domain Dao miliknya dikenal sebagai 墨界 · Dunia Tinta. Begitu terbuka, tinta dapat memenuhi ruang di sekitarnya dan mengubah kenyataan menjadi seperti sebuah lukisan. Setiap garis yang ia goreskan dapat berubah menjadi bilah, segel, makhluk, atau bahkan ruang kecil yang terpisah dari dunia luar."
       ]
+    },
+    {
+      name: "舒兰昊",
+      pinyin: "Shū Lánhào",
+      title: "孤道散人 · Pengembara Dao yang Menyendiri",
+      quote: {
+        cn: "我不问天为何高，只问此路，能否走到尽头。",
+        id: "\u201CAku tidak bertanya mengapa Langit begitu tinggi. Aku hanya ingin tahu, apakah jalan ini dapat kutempuh hingga ujungnya.\u201D"
+      },
+      paras: [
+        "Seorang kultivator mandiri (散修 · Sǎnxiū) yang lahir di sebuah alam rendah dan sepanjang hidupnya tidak pernah bergabung dengan sekte, tidak termasuk keluarga kultivator, maupun kerajaan besar. Ia tidak memiliki guru terkenal ataupun warisan kuno untuk diandalkan. Semua yang dimilikinya diperoleh melalui pengembaraan dan pemahamannya sendiri terhadap Dao.",
+        "Shū Lánhào menghabiskan sebagian besar hidupnya menjelajahi dunia. Ia memasuki reruntuhan kuno, melintasi wilayah terlarang, dan menyaksikan banyak sekte bangkit lalu menghilang dari sejarah. Dari perjalanan tersebut, ia perlahan membentuk jalannya sendiri dan akhirnya memahami 无极道 · Wújí Dào — Dao Tanpa Batas.",
+        "Namun dunia tempat ia dilahirkan menyimpan sebuah rahasia yang bahkan tidak diketahui oleh sebagian besar kultivator. 太玄界 diyakini bukan dunia alami, melainkan sebuah dunia buatan yang berada di dalam gua kediaman seorang kultivator yang pernah mencapai Step 12. Tidak ada yang mengetahui siapa pemilik gua tersebut atau mengapa dunia itu diciptakan.",
+        "Sebenarnya, kultivator yang mencapai Step 3 atau Step 4 sudah memiliki kemungkinan untuk menemukan jalan menuju Alam Tinggi. Namun Shū Lánhào tidak memilih untuk pergi lebih awal. Ia terus menempuh jalan kultivasinya di alam rendah, ingin mengetahui seberapa jauh dirinya dapat berjalan tanpa bergantung pada siapa pun. Setelah bertahun-tahun, ia akhirnya mencapai Step 8 dan menyentuh batas tertinggi yang dapat ia capai di alam rendah.",
+        "Pada saat itu, Shū Lánhào membuka Gerbang Langit dengan kekuatannya sendiri dan akhirnya meninggalkan dunia kelahirannya. Dan baru setelah meninggalkan alam rendah, ia mengetahui bahwa dunia yang selama ini ia anggap sebagai seluruh dunianya hanyalah sebuah dunia kecil yang tersimpan di dalam gua seorang kultivator Step 12."
+      ],
+      facts: [
+        ["Universe", "无尽星海 · Wújìn Xīnghǎi\nLautan Bintang Tak Berujung"],
+        ["Alam Rendah", "苍寰下界 · Cānghuán Xiàjiè"],
+        ["Dunia Asal", "太玄界 · Tàixuán Jiè"],
+        ["Benua", "玄岳大陆 · Xuányuè Dàlù"],
+        ["Wilayah Asal", "落星州 · Luòxīng Zhōu"],
+        ["Alamat", "寂天原 · Jìtiān Yuán"],
+        ["Kultivasi", "第八阶 · 通天阶 — Step 8, Heaven-Piercing Step"],
+        ["Step", "天门境 · Tiānmén Jìng — Heaven Gate Realm\nRanah terakhir dalam Step 8"],
+        ["Dao", "无极道 · Wújí Dào — Dao Tanpa Batas"],
+        ["Tipe Kultivator", "散修 · Sǎnxiū — Kultivator Mandiri"],
+        ["Era", "Zaman Kuno"],
+        ["Status", "Menuju Alam Tinggi"]
+      ],
+      subHeading: "Tentang Step 8 — 通天阶",
+      subParas: [
+        "通天阶 · Tōngtiān Jiē — Heaven-Piercing Step merupakan Step kedelapan dalam sistem kultivasi.",
+        "Berbeda dengan anggapan banyak kultivator di alam rendah, Step 8 bukanlah syarat mutlak untuk naik ke Alam Tinggi. Seorang kultivator yang telah mencapai Step 3 atau Step 4 sudah memiliki kemungkinan untuk menemukan jalan menuju alam yang lebih tinggi. Namun, semakin rendah tingkat kultivasi seseorang, semakin berbahaya proses kenaikan tersebut. Tubuh, jiwa, dan pemahaman Dao harus mampu bertahan terhadap tekanan hukum dari alam yang lebih tinggi. Karena itu, sebagian besar kultivator memilih terus memperkuat diri sebelum mencoba melakukan kenaikan.",
+        "天门境 · Tiānmén Jìng — Heaven Gate Realm merupakan ranah terakhir dalam Step 8. Pada tingkat ini, seorang kultivator telah mampu memahami batas antara alam dan membuka 天门 · Gerbang Langit menggunakan kekuatannya sendiri.",
+        "Bagi Shū Lánhào, pencapaian ini merupakan hasil dari jalan yang ditempuhnya selama bertahun-tahun sebagai kultivator mandiri. Ia tidak membutuhkan sekte, formasi kuno, ataupun bantuan seorang ahli untuk membuka jalan menuju Alam Tinggi.",
+        "Ketika Gerbang Langit terbuka, ia meninggalkan 太玄界 · Tàixuán Jiè dan melangkah menuju dunia yang lebih tinggi. Namun perjalanan tersebut juga mengungkap kebenaran yang selama ini tersembunyi: dunia kelahirannya bukanlah dunia alami, melainkan sebuah dunia kecil yang diciptakan di dalam gua kediaman seorang kultivator Step 12. Dan Shū Lánhào baru menyadari hal tersebut setelah dirinya berhasil keluar dari dunia itu."
+      ]
+    },
+    { placeholder: true },
+    {
+      name: "孟天舟 · 离棠",
+      pinyin: "Mèng Tiānzhōu · Lí Táng",
+      title: "逐境遗族 · Pewaris Klan",
+      quote: {
+        cn: "他们让我离开那片天，那我便自己走回来。",
+        id: "\u201CMereka menyuruhku meninggalkan Langit itu. Maka aku akan berjalan kembali dengan kakiku sendiri.\u201D"
+      },
+      paras: [
+        "Mèng Tiānzhōu · Lí Táng merupakan seorang kultivator yang berasal dari klan kerajaan kuno di Alam Tinggi. Ia lahir dengan nama keluarga Mèng, sebuah klan yang telah berdiri selama banyak zaman dan memiliki kedudukan tinggi di antara berbagai kekuatan Alam Tinggi. Namun kedudukannya tidak bertahan lama.",
+        "Ketika kultivasinya masih berada pada Step 3, terjadi perselisihan di dalam klan. Para tetua mengambil keputusan untuk mengusir Lí Táng dari wilayah keluarga. Ia tidak dibunuh, tetapi dijatuhkan ke sebuah alam terendah, tempat yang sama sekali berbeda dari dunia tempat ia dilahirkan. Pada saat itu, ia bahkan belum memahami sepenuhnya mengapa para tetua begitu ingin menyingkirkannya. Yang lebih menyakitkan bukanlah kehilangan kekuatan ataupun statusnya sebagai keturunan klan kerajaan, melainkan kenyataan bahwa orang-orang yang seharusnya menjadi keluarganya sendiri memilih untuk membuangnya.",
+        "Lí Táng akhirnya tiba di sebuah dunia yang bagi para kultivator Alam Tinggi bahkan tidak layak disebut sebagai tempat untuk berkultivasi. Di dunia tersebut, Step 8 dianggap sebagai puncak. Tidak ada catatan mengenai Step 9, tidak ada legenda mengenai kultivator yang mampu melampaui batas tersebut, dan sebagian besar kultivator menganggap dunia mereka memang memiliki batas yang tidak dapat ditembus. Namun Lí Táng tidak memiliki alasan untuk mempercayai hal tersebut. Ia telah melihat dunia yang lebih tinggi, dan ia tahu bahwa batas yang disebut \u201Cpuncak\u201D oleh orang lain belum tentu benar-benar merupakan akhir.",
+        "Untuk bertahan hidup, ia menyembunyikan identitasnya dan hidup seperti kultivator biasa. Ia tidak mendirikan sekte, tidak mencari pengikut, dan tidak pernah menggunakan nama klan kerajaan Mèng untuk mendapatkan keuntungan. Ia mulai membangun kembali kultivasinya dari dasar. Dari Step 3, ia perlahan naik: Step 4, Step 5, Step 6, Step 7, kemudian Step 8. Namun ketika mencapai puncak Step 8, Lí Táng tidak berhenti. Ia justru mencoba melakukan sesuatu yang belum pernah dilakukan oleh siapa pun di dunia tersebut: menembus batas dunia. Pada akhirnya, ia berhasil. Untuk pertama kalinya dalam sejarah dunia itu, seseorang mencapai Step 9.",
+        "Jauh sebelum itu, ia pernah bertemu dengan seorang pemuda bernama 舒兰昊 · Shū Lánhào yang saat itu masih berada di Step 1 — bukan jenius yang terkenal, bukan keturunan keluarga besar, dan belum memiliki pemahaman Dao yang kuat. Lí Táng melihat bagaimana pemuda itu mengejar peningkatan kultivasi dengan terus membandingkan dirinya dengan orang lain, lalu mengatakan sesuatu yang sederhana: \u201C境界只是路上的名字，不是你要去的地方。\u201D — Ranah hanyalah nama di sepanjang perjalanan; itu bukan tempat yang ingin kau tuju.",
+        "Ia tidak memberikan teknik, pil, ataupun artefak — hanya sebuah pemahaman. Namun pemahaman sederhana tersebut kemudian menjadi salah satu dasar Dao Hati Shū Lánhào. Bertahun-tahun setelah pertemuan itu, ketika Shū Lánhào mencapai Step 8 dan berhasil menembus batas dunia menuju Alam Tinggi, ia baru menyadari arti sebenarnya dari perkataan tersebut: batas bukanlah akhir."
+      ],
+      facts: [
+        ["Universe", "无尽星海 · Wújìn Xīnghǎi\nLautan Bintang Tak Berujung"],
+        ["Alam Asal", "太初上界 · Tàichū Shàngjiè\nAlam Tinggi Taichu"],
+        ["Dunia Tempat Dibuang", "太玄界 · Tàixuán Jiè\nDunia Taixuan"],
+        ["Benua", "九霄大陆 · Jiǔxiāo Dàlù"],
+        ["Wilayah", "寒星州 · Hánxīng Zhōu"],
+        ["Alamat", "落尘古城 · Luòchén Gǔchéng"],
+        ["Klan", "孟氏皇族 · Mèng Shì Huángzú\nKlan Kerajaan Mèng"],
+        ["Kultivasi", "第九阶 · 帝域阶\nStep 9 — Imperial Domain Step"],
+        ["Step", "帝域境 · Dìyù Jìng\nEmperor Domain Realm — Ranah awal Step 9"],
+        ["Kultivasi Saat Dibuang", "第三阶 · Sān Jiē\nStep 3"],
+        ["Dao", "星辰道 · Xīngchén Dào\nDao Bintang"],
+        ["Status", "Mengembara"]
+      ],
+      subHeading: "Tentang Step 9 — 帝域阶",
+      subParas: [
+        "帝域阶 · Dìyù Jiē — Imperial Domain Step merupakan Step kesembilan dalam sistem kultivasi. Ranah ini berada di atas batas Step 8, sehingga tidak dapat dicapai dengan mudah oleh kultivator dari alam rendah.",
+        "Di dunia tempat Lí Táng berada, Step 8 merupakan batas tertinggi yang diketahui. Karena itu, kemunculan seorang kultivator Step 9 menjadi sesuatu yang belum pernah terjadi sebelumnya.",
+        "帝域境 · Dìyù Jìng — Emperor Domain Realm merupakan ranah pertama dalam Step 9. Pada tahap ini, seorang kultivator mulai membentuk Domain miliknya sendiri. Pemahaman terhadap Dao tidak lagi hanya digunakan untuk memperkuat tubuh atau melakukan teknik, tetapi mulai memengaruhi ruang dan hukum di sekitarnya.",
+        "Lí Táng baru mencapai ranah awal Step 9, sehingga ia masih memiliki banyak hal yang harus dipahami sebelum benar-benar mampu menguasai kekuatan tingkat tersebut."
+      ]
     }
   ];
 
