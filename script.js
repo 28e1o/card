@@ -74,7 +74,7 @@
       title: "星河公子 · Tuan Muda Sungai Bintang",
       quote: {
         cn: "时间，真是个你们的挣扎，根本好笑易。见证着真正的绝望吧。",
-        id: "\u201CWaktu\u2026 perjuangan kalian ini benar-benar lucu. Saksikanlah keputusasaan yang sejati.\u201D"
+        id: "\u201CWaktu, betapa beratnya perjuangan yang telah kau lalui, sungguh menggelikan. Saksikan keputusasaan yang sesungguhnya.\u201D"
       },
       paras: [
         "Seorang kultivator misterius dari Zaman Kuno yang sepanjang hidupnya menapaki Dao Waktu. Ia pernah mengembara melewati berbagai wilayah, menyaksikan pergantian zaman dan kehancuran banyak peradaban.",
@@ -309,7 +309,7 @@
       explainBox.appendChild(ph);
       return;
     }
-    explainBox.appendChild(h("span", "kicker", pad(idx + 1) + " / " + pad(COUNT)));
+    explainBox.appendChild(h("span", "kicker", "Card " + pad(idx + 1) + " / " + pad(COUNT)));
     explainBox.appendChild(h("div", "name-cn", entry.name));
     if (entry.pinyin) explainBox.appendChild(h("div", "name-py", entry.pinyin));
     if (entry.title) explainBox.appendChild(h("div", "char-title", entry.title));
