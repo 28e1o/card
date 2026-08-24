@@ -22,7 +22,7 @@
 
   <div class="controls">
     <button class="arrow" id="prev" aria-label="Sebelumnya">&#8592;</button>
-    <div class="dots" id="dots"></div>
+    <div class="dots" id="dots"><div class="dots-track" id="dotsTrack"></div></div>
     <button class="arrow" id="next" aria-label="Berikutnya">&#8594;</button>
   </div>
   <div class="counter" id="counter">01 / 05</div>
@@ -36,10 +36,16 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="Tutup">&#10005;</button>
+  <div class="lb-progress" id="lbProgress">
+    <div class="lb-progress-track"><div class="lb-progress-fill" id="lbProgressFill"></div></div>
+    <span class="lb-progress-pct" id="lbProgressPct">0%</span>
+  </div>
   <div class="lb-card">
     <div class="lb-card-in" id="lbCardIn">
       <img id="lbColorImg" alt="Versi warna">
+      <div class="lb-skeleton" id="lbSkeleton"><div class="lb-spinner"></div></div>
       <div class="lb-scratch-hint" id="lbHint">Coret untuk mewarnai</div>
+      <div class="brush-cursor" id="brushCursor"></div>
     </div>
   </div>
   <button class="lb-reset" id="lbReset" aria-label="Ulangi coretan">&#8635;</button>

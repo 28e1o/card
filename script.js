@@ -213,7 +213,7 @@
   const track   = document.getElementById("track");
   const stage   = document.getElementById("stage");
   const bgStack = document.getElementById("bgStack");
-  const dotsEl  = document.getElementById("dots");
+  const dotsEl  = document.getElementById("dotsTrack");
   const counter = document.getElementById("counter");
 
   const cards = [], bgs = [], dots = [];
@@ -222,11 +222,13 @@
     const card = document.createElement("div");
     card.className = "card";
     const inner = document.createElement("div");
-    inner.className = "card-in";
+    inner.className = "card-in loading";
     const img = document.createElement("img");
-    img.src = CARD_URLS[i];
     img.alt = "Kartu " + (i + 1);
     img.draggable = false;
+    img.addEventListener("load", () => inner.classList.replace("loading", "loaded"));
+    img.addEventListener("error", () => inner.classList.remove("loading"));
+    img.src = CARD_URLS[i];
     inner.appendChild(img);
     card.appendChild(inner);
     track.appendChild(card);
@@ -261,6 +263,40 @@
 
   const pad = n => String(n).padStart(2, "0");
 
+  // --- Compact, sliding-window dot indicator ---
+  // Keeps the row short even with many cards: dots taper down in size as
+  // they get farther from the active one, and the whole strip slides so
+  // the active dot stays roughly centered (clamped at the two ends).
+  const DOT_WINDOW  = 7;              // max dots visible at "full" size at once
+  const DOT_SPACING = 11 + 12;        // dot width + gap, must match CSS
+  let dotsShownFor = -1;
+
+  function updateDots(active) {
+    if (active === dotsShownFor) return;
+    dotsShownFor = active;
+    const overflow = COUNT > DOT_WINDOW;
+    dots.forEach((d, i) => {
+      d.classList.toggle("active", i === active);
+      const dist = Math.abs(i - active);
+      let scale = 1, op = 1;
+      if (dist === 0)      { scale = 1.3; }
+      else if (!overflow)  { scale = 1; }
+      else if (dist === 1) { scale = .95; }
+      else if (dist === 2) { scale = .65; }
+      else if (dist === 3) { scale = .4;  op = .7; }
+      else                 { scale = .3;  op = .35; }
+      d.style.transform = "scale(" + scale + ")";
+      d.style.opacity = String(op);
+    });
+    if (overflow) {
+      const half = Math.floor(DOT_WINDOW / 2);
+      const centerIdx = clamp(active, half, COUNT - 1 - half);
+      dotsEl.style.transform = "translateX(" + (-(centerIdx - half) * DOT_SPACING) + "px)";
+    } else {
+      dotsEl.style.transform = "translateX(0px)";
+    }
+  }
+
   function render() {
     track.style.transform = "translate3d(" + (-half - pos * step) + "px, -50%, 0)";
 
@@ -269,11 +305,15 @@
     for (let i = 0; i < COUNT; i++) {
       const d = clamp(pos - i, -1.6, 1.6);
       const a = Math.min(Math.abs(d), 1);
-      cards[i].style.transform = "scale(" + (1 - a * 0.14) + ")";
+      const rot = clamp(d, -1, 1) * -14;
+      const tz  = -a * 90;
+      cards[i].style.transform =
+        "translateZ(" + tz + "px) rotateY(" + rot + "deg) scale(" + (1 - a * 0.14) + ")";
       cards[i].style.opacity = String(1 - a * 0.45);
-      dots[i].classList.toggle("active", i === active);
+      cards[i].style.filter = "brightness(" + (1 - a * 0.35) + ")";
       bgs[i].style.opacity = String(clamp(pos - i + 1, 0, 1));
     }
+    updateDots(active);
 
     counter.textContent = pad(active + 1) + " / " + pad(COUNT);
     renderExplain(active);
@@ -281,7 +321,7 @@
 
   function tick() {
     measure();
-    pos += (target - pos) * 0.07;
+    pos += (target - pos) * (dragging ? 1 : 0.11);
     if (Math.abs(target - pos) < 0.0008) pos = target;
     render();
     requestAnimationFrame(tick);
@@ -335,7 +375,11 @@
       entry.facts.forEach(([k, v]) => {
         const row = h("div", "fact");
         row.appendChild(h("span", "k", k));
-        row.appendChild(h("span", "v", v));
+        const vWrap = h("span", "v");
+        const lines = String(v).split("\n");
+        vWrap.appendChild(h("span", "v-main", lines[0]));
+        lines.slice(1).forEach(l => vWrap.appendChild(h("span", "v-sub", l)));
+        row.appendChild(vWrap);
         facts.appendChild(row);
       });
       explainBox.appendChild(facts);
@@ -369,10 +413,69 @@
 
   dots.forEach((d, i) => d.addEventListener("click", () => { target = i; }));
 
-  const lb        = document.getElementById("lightbox");
-  const lbCardBox = document.getElementById("lbCardIn");
-  const lbColor   = document.getElementById("lbColorImg");
-  const lbHint    = document.getElementById("lbHint");
+  // --- Swipe / drag gesture on the main gallery (item 3) ---
+  let dragging   = false;
+  let dragLocked = false;   // true once we've decided this gesture is horizontal
+  let dragAxisKnown = false;
+  let dragStartX = 0, dragStartY = 0, dragStartPos = 0;
+  let dragLastX  = 0, dragLastT = 0, dragVel = 0;
+
+  function dragDown(e) {
+    if (openIdx >= 0) return; // ignore while lightbox open
+    dragging   = true;
+    dragLocked = false;
+    dragAxisKnown = false;
+    dragStartX = dragLastX = e.clientX;
+    dragStartY = e.clientY;
+    dragStartPos = pos;
+    dragLastT  = performance.now();
+    dragVel = 0;
+    stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+  }
+  function dragMove(e) {
+    if (!dragging) return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    if (!dragAxisKnown) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      dragAxisKnown = true;
+      dragLocked = Math.abs(dx) > Math.abs(dy);
+      if (dragLocked) stage.classList.add("dragging");
+    }
+    if (!dragLocked) return; // vertical gesture: let the page scroll
+    e.preventDefault();
+    const now = performance.now();
+    const dt  = Math.max(1, now - dragLastT);
+    dragVel   = (e.clientX - dragLastX) / dt;
+    dragLastX = e.clientX; dragLastT = now;
+    const deltaCards = -dx / (step || 1);
+    target = clamp(dragStartPos + deltaCards, 0, COUNT - 1);
+    pos = target;
+  }
+  function dragUp() {
+    if (!dragging) return;
+    dragging = false;
+    stage.classList.remove("dragging");
+    if (dragLocked) {
+      // Flick: a fast release nudges one extra card in the flick direction.
+      const flick = Math.abs(dragVel) > 0.5 ? (dragVel < 0 ? 1 : -1) : 0;
+      target = clamp(Math.round(target + flick), 0, COUNT - 1);
+    }
+  }
+  stage.addEventListener("pointerdown", dragDown);
+  stage.addEventListener("pointermove", dragMove);
+  stage.addEventListener("pointerup", dragUp);
+  stage.addEventListener("pointercancel", dragUp);
+  stage.addEventListener("pointerleave", () => { if (dragging) dragUp(); });
+
+  const lb          = document.getElementById("lightbox");
+  const lbCardBox   = document.getElementById("lbCardIn");
+  const lbColor     = document.getElementById("lbColorImg");
+  const lbHint      = document.getElementById("lbHint");
+  const lbSkeleton  = document.getElementById("lbSkeleton");
+  const lbProgFill  = document.getElementById("lbProgressFill");
+  const lbProgPct   = document.getElementById("lbProgressPct");
+  const brushCursor = document.getElementById("brushCursor");
 
   const scratchCv    = [];
   const scratchCtx   = [];
@@ -395,6 +498,109 @@
     let w, h;
     if (ir > cr) { h = H; w = H * ir; } else { w = W; h = W / ir; }
     c.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+  }
+
+  // --- Scratch progress (item 1) ---
+  const progressSample = document.createElement("canvas");
+  progressSample.width = 40; progressSample.height = 64;
+  const progressCtx = progressSample.getContext("2d", { willReadFrequently: true });
+  let progressPending = false;
+
+  function updateProgress(i) {
+    if (i !== openIdx || !scratchCv[i]) return;
+    progressCtx.clearRect(0, 0, 40, 64);
+    progressCtx.drawImage(scratchCv[i], 0, 0, 40, 64);
+    let cleared = 0;
+    const data = progressCtx.getImageData(0, 0, 40, 64).data;
+    for (let p = 3; p < data.length; p += 4) if (data[p] < 30) cleared++;
+    const pct = Math.round((cleared / (40 * 64)) * 100);
+    lbProgFill.style.width = pct + "%";
+    lbProgPct.textContent = pct + "%";
+  }
+  function scheduleProgressUpdate(i) {
+    if (progressPending) return;
+    progressPending = true;
+    requestAnimationFrame(() => { progressPending = false; updateProgress(i); });
+  }
+
+  // --- Subtle scratch sound (item 4) ---
+  let actx = null;
+  function playScratchTick() {
+    try {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const now = actx.currentTime;
+      const dur = 0.1;
+      const buf = actx.createBuffer(1, actx.sampleRate * dur, actx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let n = 0; n < d.length; n++) d[n] = Math.random() * 2 - 1;
+
+      const src = actx.createBufferSource();
+      src.buffer = buf;
+
+      // Narrow, low-ish band so it reads as paper/graphite texture
+      // rather than a burst of radio static.
+      const hp = actx.createBiquadFilter();
+      hp.type = "highpass";
+      hp.frequency.value = 400;
+      const lp = actx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 1100 + Math.random() * 500;
+
+      // Soft attack + exponential decay avoids the instant-full-volume
+      // "click" that a flat-amplitude noise burst produces.
+      const gain = actx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.035, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      src.connect(hp).connect(lp).connect(gain).connect(actx.destination);
+      src.start(now);
+      src.stop(now + dur + 0.02);
+    } catch (e) { /* audio not available — fail silently */ }
+  }
+  let lastSoundAt = 0;
+  function maybePlayScratchSound() {
+    const now = performance.now();
+    if (now - lastSoundAt < 90) return;
+    lastSoundAt = now;
+    playScratchTick();
+  }
+
+  // --- Fleck particles peeling off as you scratch (item 4) ---
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let lastFleckAt = 0;
+  function spawnFlecks(clientX, clientY) {
+    if (reduceMotion) return;
+    const now = performance.now();
+    if (now - lastFleckAt < 55) return;
+    lastFleckAt = now;
+    const box = lbCardBox.getBoundingClientRect();
+    const n = 2 + Math.floor(Math.random() * 2);
+    for (let k = 0; k < n; k++) {
+      const f = document.createElement("span");
+      f.className = "fleck";
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 14 + Math.random() * 22;
+      f.style.left = (clientX - box.left) + "px";
+      f.style.top  = (clientY - box.top) + "px";
+      f.style.setProperty("--dx", (Math.cos(ang) * dist) + "px");
+      f.style.setProperty("--dy", (Math.sin(ang) * dist) + "px");
+      f.style.setProperty("--rot", (Math.random() * 180 - 90) + "deg");
+      lbCardBox.appendChild(f);
+      f.addEventListener("animationend", () => f.remove());
+    }
+  }
+
+  // --- Custom brush cursor (item 22) ---
+  function moveBrushCursor(clientX, clientY) {
+    const box = lbCardBox.getBoundingClientRect();
+    brushCursor.style.transform =
+      "translate(" + (clientX - box.left) + "px," + (clientY - box.top) + "px)";
+    brushCursor.style.width = brush + "px";
+    brushCursor.style.height = brush + "px";
+    brushCursor.style.marginLeft = (-brush / 2) + "px";
+    brushCursor.style.marginTop  = (-brush / 2) + "px";
   }
 
   function pointerPos(c, i, e) {
@@ -425,8 +631,12 @@
       strokeTo(lx, ly, lx, ly, true);
       scratchedFlg[i] = true;
       lbHint.classList.add("hide");
+      spawnFlecks(e.clientX, e.clientY);
+      maybePlayScratchSound();
+      scheduleProgressUpdate(i);
     });
     c.addEventListener("pointermove", e => {
+      if (e.pointerType !== "touch") moveBrushCursor(e.clientX, e.clientY);
       if (!drawing || !scratchReady[i]) return;
       const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
       for (const ev of evs) {
@@ -434,7 +644,14 @@
         strokeTo(lx, ly, x, y, false);
         lx = x; ly = y;
       }
+      spawnFlecks(e.clientX, e.clientY);
+      maybePlayScratchSound();
+      scheduleProgressUpdate(i);
     });
+    c.addEventListener("pointerenter", e => {
+      if (e.pointerType !== "touch") brushCursor.classList.add("show");
+    });
+    c.addEventListener("pointerleave", () => brushCursor.classList.remove("show"));
     ["pointerup", "pointercancel"].forEach(ev =>
       c.addEventListener(ev, () => { drawing = false; })
     );
@@ -502,6 +719,7 @@
     ctx.clearRect(0, 0, w, hgt);
     ctx.drawImage(snapshot, 0, 0, w, hgt);
     brush = Math.max(24, Math.min(56, Math.min(w, hgt) * 0.08));
+    scheduleProgressUpdate(i);
   }
 
   function strokeTo(x0, y0, x1, y1, dot) {
@@ -531,7 +749,9 @@
 
   function prepareScratch(i) {
     scratchReady[i] = false;
+    lbSkeleton.classList.remove("hide");
     const bw = new Image();
+    bw.crossOrigin = "anonymous"; // needed so getImageData (progress %) doesn't taint/throw
     bw.onload = () => {
       if (openIdx !== i) return;
       scratchBw[i] = bw;
@@ -547,6 +767,8 @@
         brush = Math.max(24, Math.min(56, Math.min(w, hgt) * 0.08));
       }
       scratchReady[i] = true;
+      lbSkeleton.classList.add("hide");
+      updateProgress(i);
     };
     bw.src = CARD_URLS[i];
   }
@@ -555,6 +777,9 @@
     openIdx = i;
     cv = null; cx = null; drawing = false;
     cardAnimDone = false;
+    lbProgFill.style.width = "0%";
+    lbProgPct.textContent = "0%";
+    brushCursor.classList.remove("show");
     lbColor.src = BG_URLS[i] || CARD_URLS[i];
     ensureCanvas(i);
     mountCanvas(i);
@@ -573,6 +798,7 @@
   function closeLb() {
     openIdx = -1;
     cv = null; cx = null;
+    brushCursor.classList.remove("show");
     lb.classList.remove("open");
     document.body.style.overflow = "";
   }
@@ -608,7 +834,11 @@
   document.getElementById("lbClose").addEventListener("click", closeLb);
   document.getElementById("lbReset").addEventListener("click", () => {
     if (openIdx < 0) return;
-    if (initScratchLayer(openIdx)) lbHint.classList.remove("hide");
+    if (initScratchLayer(openIdx)) {
+      lbHint.classList.remove("hide");
+      lbProgFill.style.width = "0%";
+      lbProgPct.textContent = "0%";
+    }
   });
   lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
   window.addEventListener("keydown", e => {

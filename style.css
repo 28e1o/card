@@ -69,7 +69,13 @@ header {
   height: calc(100svh - 190px);
   min-height: 420px;
   overflow: hidden;
+  perspective: 1400px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
 }
+.stage.dragging { cursor: grabbing; }
 
 .track {
   position: absolute;
@@ -78,6 +84,7 @@ header {
   display: flex;
   gap: var(--gap);
   will-change: transform;
+  transform-style: preserve-3d;
 }
 
 .card {
@@ -85,7 +92,7 @@ header {
   height: min(65vh, 630px);
   height: min(65svh, 630px);
   aspect-ratio: var(--ratio);
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 .card-in {
   width: 100%;
@@ -110,6 +117,21 @@ header {
   object-fit: cover;
   display: block;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.card-in.loaded img { opacity: 1; }
+.card-in.loading {
+  background: linear-gradient(100deg, #f0f0f0 30%, #fafafa 45%, #f0f0f0 60%);
+  background-size: 250% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-in.loading { animation: none; }
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -50% 0; }
 }
 
 .controls {
@@ -135,8 +157,21 @@ header {
 .arrow:hover { transform: translateY(-2px); box-shadow: 0 10px 18px -6px rgba(0,0,0,.45); }
 .arrow:active { transform: translateY(1px); box-shadow: 0 3px 8px -4px rgba(0,0,0,.4); }
 
-.dots { display: flex; gap: 12px; }
+.dots {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 160px; /* ~7 dots worth of width+gap; keeps the row short */
+}
+.dots-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform .3s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
 .dot {
+  flex: 0 0 auto;
   width: 11px;
   height: 11px;
   border: 2px solid #000;
@@ -144,9 +179,9 @@ header {
   background: transparent;
   cursor: pointer;
   padding: 0;
-  transition: background .25s ease, transform .25s ease;
+  transition: background .25s ease, transform .25s ease, opacity .25s ease;
 }
-.dot.active { background: #000; transform: scale(1.25); }
+.dot.active { background: #000; }
 
 .counter {
   text-align: center;
@@ -182,20 +217,28 @@ header {
   font-size: clamp(36px, 6vw, 54px);
   font-weight: 800;
   line-height: 1.15;
+  letter-spacing: -.01em;
   font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK SC", serif;
+  font-feature-settings: "palt";
+  text-rendering: optimizeLegibility;
 }
 .name-py {
   text-align: center;
   margin-top: 8px;
-  font-size: 14px;
-  letter-spacing: .22em;
-  opacity: .55;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .28em;
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+  opacity: .5;
 }
 .char-title {
   text-align: center;
   margin-top: 14px;
   font-size: 15px;
   font-weight: 600;
+  letter-spacing: -.005em;
+  font-feature-settings: "palt";
   opacity: .85;
 }
 .divider {
@@ -230,13 +273,17 @@ header {
   font-size: clamp(18px, 2.8vw, 24px);
   font-weight: 700;
   line-height: 2;
+  letter-spacing: -.005em;
+  font-feature-settings: "palt";
 }
 .quote-id {
   margin-top: 16px;
-  font-size: 14px;
+  font-size: 13.5px;
+  font-family: Georgia, "Times New Roman", serif;
   font-style: italic;
+  letter-spacing: .01em;
   line-height: 1.9;
-  opacity: .65;
+  opacity: .6;
 }
 
 .facts {
@@ -256,10 +303,27 @@ header {
 .fact .k {
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
   font-size: 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
 }
-.fact .v { opacity: .85; line-height: 1.7; white-space: pre-line; }
+.fact .v { line-height: 1.7; }
+.fact .v-main {
+  display: block;
+  opacity: .92;
+  font-feature-settings: "palt";
+  letter-spacing: -.003em;
+}
+.fact .v-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  letter-spacing: .01em;
+  opacity: .5;
+}
 
 .sub-h {
   margin-top: 52px;
@@ -371,6 +435,122 @@ header {
   transition: opacity .45s ease;
 }
 .lb-scratch-hint.hide { opacity: 0; }
+
+/* Scratch progress indicator (item 1) */
+.lb-progress {
+  position: fixed;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 51;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(240px, 60vw);
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+.lightbox.open .lb-progress { opacity: 1; }
+.lb-progress-track {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.22);
+  overflow: hidden;
+}
+.lb-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #fff;
+  border-radius: 999px;
+  transition: width .18s ease;
+}
+.lb-progress-pct {
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  opacity: .8;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Lightbox loading skeleton (item 6) */
+.lb-skeleton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #eee;
+  opacity: 1;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+.lb-skeleton.hide { opacity: 0; }
+.lb-spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,.15);
+  border-top-color: #000;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .lb-spinner { animation-duration: 1.6s; }
+}
+
+/* Scratch flecks (item 4) */
+.fleck {
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px;
+  height: 7px;
+  background: #cfcfcf;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 6;
+  opacity: .9;
+  animation: fleck-fly .5s ease-out forwards;
+}
+@keyframes fleck-fly {
+  to {
+    transform: translate(var(--dx), calc(var(--dy) + 18px)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+/* Custom brush cursor (item 22) */
+.scratch-canvas { cursor: none; }
+.brush-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  background: rgba(255,255,255,.12);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s ease, width .1s ease, height .1s ease, margin .1s ease;
+  z-index: 5;
+}
+.brush-cursor.show { opacity: 1; }
+.brush-cursor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+}
 
 .lb-close {
   position: fixed;
